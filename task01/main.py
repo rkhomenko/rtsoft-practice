@@ -1,3 +1,4 @@
+import numpy as np
 import cv2
 
 
@@ -38,8 +39,10 @@ def main():
             # Находим контур с максимальной площадью
             nb_contour = max(contours, key=cv2.contourArea)
 
-            x, y, w, h = cv2.boundingRect(nb_contour)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            rect = cv2.minAreaRect(nb_contour)
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+            cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
         cv2.imshow('Input', frame)
 
