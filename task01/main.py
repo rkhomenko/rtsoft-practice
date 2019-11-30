@@ -9,7 +9,10 @@ ESC = 27
 
 while True:
     ret, frame = cap.read()
-    cv2.imshow('Input', frame)
+
+    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    cv2.imshow('Input', frame_gray)
 
     c = cv2.waitKey(1)
     if c == ESC:
