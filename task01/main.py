@@ -7,15 +7,24 @@ def draw_circle(x, frame):
 
 
 def main():
-    cap = cv2.VideoCapture('video.mp4')
+    cap_in = cv2.VideoCapture('video.mp4')
 
-    if not cap.isOpened():
-        raise IOError("Cannot open web camera")
+    fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+    size = int(cap_in.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap_in.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap_in.get(cv2.CAP_PROP_FPS))
+
+    cap_out = cv2.VideoWriter('output.mp4', fourcc=fourcc, fps=fps, frameSize=size)
+
+    if not cap_in.isOpened():
+        raise IOError('Cannot open input video')
+
+    if not cap_out.isOpened():
+        raise IOError('Cannot open output video')
 
     ESC = 27
 
     while True:
-        ret, frame = cap.read()
+        ret, frame = cap_in.read()
 
         if not ret:
             break
@@ -44,13 +53,17 @@ def main():
             box = np.int0(box)
             cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
+        cap_out.write(frame)
+
         cv2.imshow('Input', frame)
 
         c = cv2.waitKey(1)
         if c == ESC:
             break
 
-    cap.release()
+    cap_in.release()
+    cap_out.release()
+
     cv2.destroyAllWindows()
 
 
